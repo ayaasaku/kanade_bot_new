@@ -17,8 +17,7 @@ from modules.main import errEmbed, log
 #from utility.apps.sekai.virtual_live_info import virtual_live_ping_tw, virtual_live_ping_jp
 
 load_dotenv()
-token = os.getenv('TOKEN')
-
+token = os.environ['TOKEN']
 
 intents = Intents.default()
 intents.members = True
@@ -31,7 +30,7 @@ class KanadeBot(commands.Bot):
         super().__init__(
             command_prefix=['!','%'],
             intents=intents,
-            application_id=os.getenv('APP_ID')
+            application_id=os.environ['APP_ID']
         )
         
     async def setup_hook(self) -> None:
