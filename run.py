@@ -12,6 +12,9 @@ from discord import (Game, HTTPException, Intents, Interaction, Message,
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 
+from flask import Flask
+from threading import Thread 
+
 from modules.debug import DebugView
 from modules.main import errEmbed, log
 #from utility.apps.sekai.virtual_live_info import virtual_live_ping_tw, virtual_live_ping_jp
@@ -84,9 +87,31 @@ class KanadeBot(commands.Bot):
         await self.session.close()
         return await super().close()
 
+app = Flask('') 
+@app.route('/')
+def main(): 
+    return "Your Bot Is Ready" 
+
+def run(): 
+    app.run(host="0.0.0.0", port=8000) 
+    
+def keep_alive(): 
+    server = Thread(target=run) 
+    server.start()
+
 
 bot = KanadeBot()
 tree = bot.tree
+status = ['a', 'b']
+
+@bot.event
+async def on_ready(): 
+    change_status.start() 
+    print("Your bot is ready") 
+    
+@tasks.loop(seconds=10)
+async def change_status(): 
+    await bot.change_presence(activity=Game(next(status)))
 
 
 @tree.error
